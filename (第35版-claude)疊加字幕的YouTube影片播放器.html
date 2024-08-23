@@ -95,7 +95,7 @@
                 font-size: 20px;
             }
             .subtitles-container {
-                font-size: 100px;
+                font-size: 18px;
             }
         }
     </style>
@@ -202,20 +202,21 @@
         }
 
         function processSRT(srt) {
-            var subtitles = [];
-            srt = srt.replace(/\r\n|\r|\n/g, '\n');
-            var pattern = /(\d+)\n(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})\n([\s\S]+?)(?=\n\n|\n*$)/gm;
-            var result;
-            while ((result = pattern.exec(srt)) != null) {
-                var content = result[10].split('\n').filter(line => line.trim().length > 0);
-                subtitles.push({
-                    start: parseFloat(result[2] * 3600) + parseFloat(result[3] * 60) + parseFloat(result[4]) + parseFloat(result[5] / 1000),
-                    end: parseFloat(result[6] * 3600) + parseFloat(result[7] * 60) + parseFloat(result[8]) + parseFloat(result[9] / 1000),
-                    text: content.join('<br>')
-                });
-            }
-            return subtitles;
-        }
+    var subtitles = [];
+    srt = srt.replace(/\r\n|\r|\n/g, '\n'); // 标准化换行符
+    var pattern = /(\d+)\n(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})\n([\s\S]+?)(?=\n\n|\n*$)/gm;
+    var result;
+    while ((result = pattern.exec(srt)) != null) {
+        var content = result[10].split('\n').filter(line => line.trim().length > 0);
+        subtitles.push({
+            start: parseFloat(result[2] * 3600) + parseFloat(result[3] * 60) + parseFloat(result[4]) + parseFloat(result[5] / 1000),
+            end: parseFloat(result[6] * 3600) + parseFloat(result[7] * 60) + parseFloat(result[8]) + parseFloat(result[9] / 1000),
+            text: content.join('<br>')  // 用 <br> 替换换行符
+        });
+    }
+    return subtitles;
+}
+
 
         function updateSubtitles() {
             if (!player || !player.getCurrentTime) return;
