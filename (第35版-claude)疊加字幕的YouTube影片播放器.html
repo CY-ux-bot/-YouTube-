@@ -189,7 +189,7 @@
                 var reader = new FileReader();
                 reader.onload = function(e) {
                     subtitles = processSRT(e.target.result);
-                    console.log("Processed subtitles:", subtitles);
+                    console.log("Processed subtitles:", subtitles); // 输出处理好的字幕对象
                 };
                 reader.readAsText(file, 'UTF-8');
             }
@@ -217,6 +217,7 @@
                     text: content.join('<br>')  // 用 <br> 替换换行符
                 });
             }
+            console.log(subtitles);  // 在这里输出处理好的字幕对象
             return subtitles;
         }
 
@@ -227,6 +228,7 @@
             var currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
 
             if (currentSubtitle) {
+                console.log(currentSubtitle);  // 输出当前要显示的字幕内容
                 document.getElementById("subtitle-line").innerHTML = currentSubtitle.text; // 确保 <br> 正确渲染
             } else {
                 document.getElementById("subtitle-line").innerHTML = "";
