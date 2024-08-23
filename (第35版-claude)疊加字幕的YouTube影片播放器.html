@@ -46,6 +46,9 @@
             overflow: visible; /* 确保内容不会被裁剪 */
             white-space: normal; /* 正常换行显示 */
         }
+        .subtitle-line {
+            white-space: pre-line;  /* 确保换行符被正确解析和显示 */
+        }
         .form-container {
             width: 100%;
             max-width: 640px;
@@ -202,34 +205,33 @@
         }
 
         function processSRT(srt) {
-    var subtitles = [];
-    srt = srt.replace(/\r\n|\r|\n/g, '\n'); // 标准化换行符
-    var pattern = /(\d+)\n(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})\n([\s\S]+?)(?=\n\n|\n*$)/gm;
-    var result;
-    while ((result = pattern.exec(srt)) != null) {
-        var content = result[10].split('\n').filter(line => line.trim().length > 0);
-        subtitles.push({
-            start: parseFloat(result[2] * 3600) + parseFloat(result[3] * 60) + parseFloat(result[4]) + parseFloat(result[5] / 1000),
-            end: parseFloat(result[6] * 3600) + parseFloat(result[7] * 60) + parseFloat(result[8]) + parseFloat(result[9] / 1000),
-            text: content.join('<br>')  // 用 <br> 替换换行符
-        });
-    }
-    return subtitles;
-}
-
+            var subtitles = [];
+            srt = srt.replace(/\r\n|\r|\n/g, '\n'); // 标准化换行符
+            var pattern = /(\d+)\n(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})\n([\s\S]+?)(?=\n\n|\n*$)/gm;
+            var result;
+            while ((result = pattern.exec(srt)) != null) {
+                var content = result[10].split('\n').filter(line => line.trim().length > 0);
+                subtitles.push({
+                    start: parseFloat(result[2] * 3600) + parseFloat(result[3] * 60) + parseFloat(result[4]) + parseFloat(result[5] / 1000),
+                    end: parseFloat(result[6] * 3600) + parseFloat(result[7] * 60) + parseFloat(result[8]) + parseFloat(result[9] / 1000),
+                    text: content.join('<br>')  // 用 <br> 替换换行符
+                });
+            }
+            return subtitles;
+        }
 
         function updateSubtitles() {
-    if (!player || !player.getCurrentTime) return;
+            if (!player || !player.getCurrentTime) return;
 
-    var currentTime = player.getCurrentTime();
-    var currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
+            var currentTime = player.getCurrentTime();
+            var currentSubtitle = subtitles.find(sub => currentTime >= sub.start && currentTime <= sub.end);
 
-    if (currentSubtitle) {
-        document.getElementById("subtitle-line").innerHTML = currentSubtitle.text; // 确保 <br> 正确渲染
-    } else {
-        document.getElementById("subtitle-line").innerHTML = "";
-    }
-}
+            if (currentSubtitle) {
+                document.getElementById("subtitle-line").innerHTML = currentSubtitle.text; // 确保 <br> 正确渲染
+            } else {
+                document.getElementById("subtitle-line").innerHTML = "";
+            }
+        }
 
     </script>
 
