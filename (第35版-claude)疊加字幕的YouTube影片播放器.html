@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>疊加字幕的YouTube影片播放器</title>
+    <link rel="icon" href="path/to/your/favicon.ico"> <!-- 添加 favicon -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -110,10 +111,10 @@
 
         <form id="videoForm">
             <label for="youtubeLink">YouTube影片連結：</label>
-            <input type="text" id="youtubeLink" placeholder="輸入YouTube影片連結" required>
+            <input type="text" id="youtubeLink" name="youtubeLink" placeholder="輸入YouTube影片連結" required>
 
             <label for="srtFile">上傳SRT字幕檔：</label>
-            <input type="file" id="srtFile" accept=".srt">
+            <input type="file" id="srtFile" name="srtFile" accept=".srt">
 
             <button type="submit">播放影片</button>
         </form>
