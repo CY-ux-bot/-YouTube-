@@ -6,7 +6,103 @@
     <title>疊加字幕的YouTube影片播放器</title>
     <link rel="icon" href="path/to/your/favicon.ico"> <!-- 添加 favicon -->
     <style>
-        /* Styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #5a5a5a;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #videoSection {
+            display: none;
+            width: 90%;
+            max-width: 700px;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .subtitles-container {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .subtitle-line {
+            min-height: 40px; /* 避免字幕閃爍時區塊高度不穩定 */
+        }
     </style>
 </head>
 <body>
@@ -25,7 +121,7 @@
         </form>
     </div>
 
-    <div id="videoSection" style="display:none;">
+    <div id="videoSection">
         <div class="video-container">
             <div id="ytplayer"></div>
         </div>
@@ -112,13 +208,13 @@
 
         function processSRT(srt) {
             var subtitles = [];
-            srt = srt.replace(/\r\n|\r|\n/g, '\n'); // 标准化换行符
+            srt = srt.replace(/\r\n|\r|\n/g, '\n'); // 標準化換行符
             var pattern = /(\d+)\n(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})\n([\s\S]+?)(?=\n\n|\n*$)/gm;
             var result;
             while ((result = pattern.exec(srt)) != null) {
                 var lines = result[10].split('\n').filter(line => line.trim().length > 0);
                 var firstLanguage = lines[0];
-                var secondLanguage = lines.length > 1 ? lines[1] : ""; // 处理只有一行字幕的情况
+                var secondLanguage = lines.length > 1 ? lines[1] : ""; // 處理只有一行字幕的情況
                 subtitles.push({
                     start: parseFloat(result[2] * 3600) + parseFloat(result[3] * 60) + parseFloat(result[4]) + parseFloat(result[5] / 1000),
                     end: parseFloat(result[6] * 3600) + parseFloat(result[7] * 60) + parseFloat(result[8]) + parseFloat(result[9] / 1000),
